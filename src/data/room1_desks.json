@@ -1,0 +1,45 @@
+[
+  {"desk_id": "BR-11", "employee": "Manish G", "status": "occupied"},
+  {"desk_id": "BR-12", "employee": "Rahul C", "status": "occupied"},
+  {"desk_id": "BR-32", "employee": "Rashmi", "status": "occupied"},
+
+  {"desk_id": "BR-10", "employee": "Rajat", "status": "occupied"},
+  {"desk_id": "BR-13", "employee": "Deepak", "status": "occupied"},
+  {"desk_id": "BR-31", "employee": "Shilpa", "status": "occupied"},
+
+  {"desk_id": "BR-09", "employee": "Sumit M", "status": "occupied"},
+  {"desk_id": "BR-14", "employee": "Dnyanesh", "status": "occupied"},
+  {"desk_id": "BR-30", "employee": "Vaibhav", "status": "occupied"},
+
+  {"desk_id": "BR-08", "employee": "Mayur", "status": "occupied"},
+  {"desk_id": "BR-15", "employee": "Roshan", "status": "occupied"},
+  {"desk_id": "BR-29", "employee": "Neha", "status": "occupied"},
+
+  {"desk_id": "BR-07", "employee": "Nikita", "status": "occupied"},
+  {"desk_id": "BR-16", "employee": "Aamir", "status": "occupied"},
+  {"desk_id": "BR-28", "employee": "Rakshita", "status": "occupied"},
+
+  {"desk_id": "BR-06", "employee": "Payal", "status": "occupied"},
+  {"desk_id": "BR-17", "employee": "Tushar", "status": "occupied"},
+  {"desk_id": "BR-27", "employee": "", "status": "empty"},
+
+  {"desk_id": "BR-05", "employee": "Vaishnavi", "status": "occupied"},
+  {"desk_id": "BR-18", "employee": "Om Dahake", "status": "occupied"},
+  {"desk_id": "BR-26", "employee": "Saurabh", "status": "occupied"},
+
+  {"desk_id": "BR-04", "employee": "Pragati", "status": "occupied"},
+  {"desk_id": "BR-19", "employee": "Lokesh", "status": "occupied"},
+  {"desk_id": "BR-25", "employee": "Samarpita", "status": "occupied"},
+
+  {"desk_id": "BR-03", "employee": "", "status": "empty"},
+  {"desk_id": "BR-20", "employee": "Jaspreet", "status": "occupied"},
+  {"desk_id": "BR-24", "employee": "Namira", "status": "occupied"},
+
+  {"desk_id": "BR-02", "employee": "", "status": "empty"},
+  {"desk_id": "BR-21", "employee": "Taniya", "status": "occupied"},
+  {"desk_id": "BR-23", "employee": "Uma", "status": "occupied"},
+
+  {"desk_id": "BR-01", "employee": "", "status": "empty"},
+  null,
+  {"desk_id": "BR-22", "employee": "", "status": "empty"}
+]

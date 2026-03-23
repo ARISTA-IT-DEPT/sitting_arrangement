@@ -1,0 +1,890 @@
+{
+  "rooms": {
+    "room1": [
+      {
+        "desk_id": "1",
+        "employee": "Anjali",
+        "status": "occupied",
+        "gender": "female",
+        "department": "Human Resources"
+      },
+      {
+        "desk_id": "2",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "3",
+        "employee": "Shrikant",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "4",
+        "employee": "Parijat",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "5",
+        "employee": "Sameer",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "6",
+        "employee": "Shahid",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "7",
+        "employee": "Shrikant",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "8",
+        "employee": "Naseem",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "9",
+        "employee": "Pavan",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "10",
+        "employee": "Swapnil",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "11",
+        "employee": "Nivruti",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "12",
+        "employee": "Zuber",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "13",
+        "employee": "Nadeem A",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "14",
+        "employee": "Joy",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "15",
+        "employee": "Tarique",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "16",
+        "employee": "Aniket",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "17",
+        "employee": "Jatin",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "18",
+        "employee": "Azhar",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "19",
+        "employee": "Khushi",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "20",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "21",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "22",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "23",
+        "employee": "Sahil P",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "24",
+        "employee": "Nishant P",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "25",
+        "employee": "Vivek",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "26",
+        "employee": "Spatesh",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "27",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "28",
+        "employee": "Shailesh",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "29",
+        "employee": "Anshul",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "30",
+        "employee": "Akshay",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "31",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "32",
+        "employee": "Pankaj",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "33",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "34",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "35",
+        "employee": "Abhijeet",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "36",
+        "employee": "Chinmay",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "37",
+        "employee": "Mangesh",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "38",
+        "employee": "Sujit",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "39",
+        "employee": "Sanket",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "40",
+        "employee": "Prajakta",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "41",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "42",
+        "employee": "Amit G",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "43",
+        "employee": "Falguni",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "44",
+        "employee": "Pragati",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "45",
+        "employee": "Roshan",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "46",
+        "employee": "Sanket",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "47",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "48",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "49",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "50",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "51",
+        "employee": "Prasidha",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "52",
+        "employee": "Ruchita",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "53",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "54",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "55",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "56",
+        "employee": "Deepal",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "57",
+        "employee": "Apeksha",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "58",
+        "employee": "Rashmi R",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "59",
+        "employee": "Sahil V",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "60",
+        "employee": "rajesh",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "61",
+        "employee": "Harshal",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "62",
+        "employee": "Shradha",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "63",
+        "employee": "acs",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "64",
+        "employee": "Aparna",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "65",
+        "employee": "aniek",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "66",
+        "employee": "Raj",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "67",
+        "employee": "Kaustubh",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "68",
+        "employee": "Prachi",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "69",
+        "employee": "Shimon",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "70",
+        "employee": "Happy",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "71",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "72",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "73",
+        "employee": "Rahul L",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "74",
+        "employee": "Mahesh",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "75",
+        "employee": "Harish",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "76",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "77",
+        "employee": "Darren",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "78",
+        "employee": "Nadim S",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "79",
+        "employee": "Vaishnavi",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "80",
+        "employee": "Satvik",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "81",
+        "employee": "Ronnie",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "82",
+        "employee": "Nikita",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "83",
+        "employee": "Nayan",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "84",
+        "employee": "Shradheya",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "85",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "86",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "87",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "88",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "A-1",
+        "employee": "Sandeep",
+        "status": "occupied",
+        "gender": "male",
+        "department": "Technology & Development",
+        "area": "server-room"
+      },
+      {
+        "desk_id": "A-2",
+        "employee": "Himanshu",
+        "status": "occupied",
+        "gender": "male",
+        "department": "Management",
+        "area": "himanshu-desk"
+      },
+      {
+        "desk_id": "A-3",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": "",
+        "area": "sumit-cabin"
+      },
+      {
+        "desk_id": "A-4",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": "",
+        "area": "vishal-cabin"
+      },
+      {
+        "desk_id": "A-5",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": "",
+        "area": "hr-cabin"
+      }
+    ],
+    "room2": [
+      {
+        "desk_id": "BR-11",
+        "employee": "Manish G",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-12",
+        "employee": "Rahul C",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-32",
+        "employee": "Rashmi",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-10",
+        "employee": "Rajat",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-13",
+        "employee": "Deepak",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-31",
+        "employee": "Shilpa",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-09",
+        "employee": "Sumit M",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-14",
+        "employee": "Dnyanesh",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-30",
+        "employee": "Vaibhav",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-08",
+        "employee": "Mayur",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-15",
+        "employee": "Roshan",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-29",
+        "employee": "Neha",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-07",
+        "employee": "Nikita",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-16",
+        "employee": "Aamir",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-28",
+        "employee": "Rakshita",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-06",
+        "employee": "Payal",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-17",
+        "employee": "Tushar",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-27",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-05",
+        "employee": "Vaishnavi",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-18",
+        "employee": "Om Dahake",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-26",
+        "employee": "Saurabh",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-04",
+        "employee": "Pragati",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-19",
+        "employee": "Lokesh",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-25",
+        "employee": "Samarpita",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-03",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-20",
+        "employee": "Jaspreet",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-24",
+        "employee": "Namira",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-02",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-21",
+        "employee": "Taniya",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-23",
+        "employee": "Uma",
+        "status": "occupied",
+        "gender": "",
+        "department": ""
+      },
+      {
+        "desk_id": "BR-01",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      },
+      null,
+      {
+        "desk_id": "BR-22",
+        "employee": "",
+        "status": "available",
+        "gender": "",
+        "department": ""
+      }
+    ]
+  },
+  "savedAt": "2026-03-13T17:24:16.441Z"
+}
