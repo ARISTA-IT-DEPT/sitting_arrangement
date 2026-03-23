@@ -95,7 +95,7 @@ function RoomOnePlan({ desks, onDeskClick, canEdit = true, activeDepartment = nu
         variant="room1"
         activeDepartment={activeDepartment}
         isEditable={canEdit}
-        onClick={canEdit ? () => onDeskClick(desk.desk_id) : undefined}
+        onClick={() => onDeskClick(desk.desk_id)}
       />
     );
   }
@@ -115,7 +115,7 @@ function RoomOnePlan({ desks, onDeskClick, canEdit = true, activeDepartment = nu
           variant="cabin"
           activeDepartment={activeDepartment}
           isEditable={canEdit}
-          onClick={canEdit ? () => onDeskClick(desk.desk_id) : undefined}
+          onClick={() => onDeskClick(desk.desk_id)}
         />
       </div>
     );

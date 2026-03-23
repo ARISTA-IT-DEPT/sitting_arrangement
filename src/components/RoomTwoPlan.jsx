@@ -55,7 +55,7 @@ function RoomTwoPlan({ desks, onDeskClick, canEdit = true, activeDepartment = nu
                       variant="room2"
                       activeDepartment={activeDepartment}
                       isEditable={canEdit}
-                      onClick={canEdit ? () => onDeskClick(desk.desk_id) : undefined}
+                      onClick={() => onDeskClick(desk.desk_id)}
                     />
                   </div>
                 );

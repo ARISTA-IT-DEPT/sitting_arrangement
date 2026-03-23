@@ -53,7 +53,7 @@ function DeskBlock({
       type="button"
       className={`desk-card desk-card--${variant} desk-card--${orientation} desk-card--${desk.status}${genderClass}${departmentClass}${isEditable ? '' : ' desk-card--static'}`}
       onClick={onClick}
-      disabled={!isEditable}
+      aria-disabled={!isEditable}
       title={`${desk.desk_id} - ${employeeLabel}${desk.department ? ` (${desk.department})` : ''}`}
     >
       <span className="desk-card__content">
