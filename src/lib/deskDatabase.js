@@ -59,6 +59,62 @@ function createRecord(rooms, shiftTimings = [], savedAt = new Date().toISOString
   return { rooms, shiftTimings: normalizeShiftTimings(shiftTimings), savedAt };
 }
 
+function pickLatestRecord(leftRecord, rightRecord) {
+  return compareRecords(leftRecord, rightRecord) >= 0 ? leftRecord : rightRecord;
+}
+
+function mergeDeskMetadata(baseDesk, fallbackDesk) {
+  if (!baseDesk) {
+    return fallbackDesk ?? null;
+  }
+
+  if (!fallbackDesk) {
+    return baseDesk;
+  }
+
+  return normalizeDesk({
+    ...baseDesk,
+    gender: baseDesk.gender || fallbackDesk.gender || '',
+    department: baseDesk.department || fallbackDesk.department || '',
+    shiftTiming: baseDesk.shiftTiming || fallbackDesk.shiftTiming || '',
+  });
+}
+
+function mergeRoomEntries(baseEntries, fallbackEntries) {
+  const fallbackEntryMap = new Map(
+    (fallbackEntries || [])
+      .filter((entry) => entry && typeof entry === 'object' && typeof entry.desk_id === 'string')
+      .map((entry) => [entry.desk_id, entry]),
+  );
+
+  return (baseEntries || []).map((entry) => {
+    if (!entry) {
+      return null;
+    }
+
+    return mergeDeskMetadata(entry, fallbackEntryMap.get(entry.desk_id) ?? null);
+  });
+}
+
+function mergeRecords(localRecord, apiRecord) {
+  const latestRecord = pickLatestRecord(localRecord, apiRecord);
+  const fallbackRecord = latestRecord === localRecord ? apiRecord : localRecord;
+
+  return {
+    savedAt: latestRecord.savedAt,
+    rooms: {
+      room1: withRoomOneAdditionalDesks(
+        mergeRoomEntries(latestRecord.rooms?.room1, fallbackRecord.rooms?.room1),
+      ),
+      room2: mergeRoomEntries(latestRecord.rooms?.room2, fallbackRecord.rooms?.room2),
+    },
+    shiftTimings: normalizeShiftTimingList([
+      ...(latestRecord.shiftTimings ?? []),
+      ...(fallbackRecord.shiftTimings ?? []),
+    ]),
+  };
+}
+
 function compareRecords(leftRecord, rightRecord) {
   const leftTime = Date.parse(leftRecord?.savedAt ?? '') || 0;
   const rightTime = Date.parse(rightRecord?.savedAt ?? '') || 0;
@@ -161,7 +217,7 @@ export function loadDeskDatabaseSnapshot(fallbackRooms) {
 export async function loadDeskDatabase(fallbackRooms) {
   const localRecord = readLocalRecord(fallbackRooms);
   const apiRecord = await readApiRecord(fallbackRooms);
-  const latestRecord = compareRecords(localRecord, apiRecord) >= 0 ? localRecord : apiRecord;
+  const latestRecord = mergeRecords(localRecord, apiRecord);
 
   writeLocalRecord(latestRecord);
   return latestRecord;
