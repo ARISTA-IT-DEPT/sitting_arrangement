@@ -1,15 +1,28 @@
 import { useEffect, useEffectEvent, useState } from 'react';
 import { DEPARTMENTS } from '../lib/deskModel';
 
-function EditDeskModal({ desk, roomLabel, onClose, onSave }) {
+function EditDeskModal({
+  desk,
+  roomLabel,
+  shiftTimingOptions,
+  customShiftTimings,
+  onAddShiftTiming,
+  onRemoveShiftTiming,
+  onClose,
+  onSave,
+}) {
   const [formState, setFormState] = useState(() => ({
     employee: desk.employee,
     status: desk.status,
     gender: desk.gender ?? '',
     department: desk.department ?? '',
+    shiftTiming: desk.shiftTiming ?? '',
   }));
+  const [newShiftTiming, setNewShiftTiming] = useState('');
+  const [shiftTimingToRemove, setShiftTimingToRemove] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUpdatingShiftOptions, setIsUpdatingShiftOptions] = useState(false);
 
   const closeOnEscape = useEffectEvent((event) => {
     if (event.key === 'Escape') {
@@ -51,6 +64,46 @@ function EditDeskModal({ desk, roomLabel, onClose, onSave }) {
       setErrorMessage(error instanceof Error ? error.message : 'Unable to save desk changes.');
     } finally {
       setIsSubmitting(false);
+    }
+  }
+
+  async function handleAddShiftTiming() {
+    setIsUpdatingShiftOptions(true);
+    setErrorMessage('');
+
+    try {
+      const normalizedShiftTiming = await onAddShiftTiming(newShiftTiming);
+      setFormState((previousState) => ({
+        ...previousState,
+        shiftTiming: normalizedShiftTiming,
+      }));
+      setNewShiftTiming('');
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Unable to add shift timing.');
+    } finally {
+      setIsUpdatingShiftOptions(false);
+    }
+  }
+
+  async function handleRemoveShiftTiming() {
+    setIsUpdatingShiftOptions(true);
+    setErrorMessage('');
+
+    try {
+      const removedShiftTiming = await onRemoveShiftTiming(shiftTimingToRemove);
+
+      if (formState.shiftTiming === removedShiftTiming) {
+        setFormState((previousState) => ({
+          ...previousState,
+          shiftTiming: '',
+        }));
+      }
+
+      setShiftTimingToRemove('');
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Unable to remove shift timing.');
+    } finally {
+      setIsUpdatingShiftOptions(false);
     }
   }
 
@@ -120,6 +173,71 @@ function EditDeskModal({ desk, roomLabel, onClose, onSave }) {
               ))}
             </select>
           </label>
+
+          <label className="desk-form__field">
+            <span>Shift Timing</span>
+            <select name="shiftTiming" value={formState.shiftTiming} onChange={handleFieldChange}>
+              <option value="">Not Set</option>
+              {shiftTimingOptions.map((shiftTiming) => (
+                <option key={shiftTiming} value={shiftTiming}>
+                  {shiftTiming}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <section className="desk-form__shift-manager" aria-label="Manage shift timings">
+            <div className="desk-form__shift-grid">
+              <label className="desk-form__field">
+                <span>Add Shift Timing</span>
+                <input
+                  type="text"
+                  value={newShiftTiming}
+                  onChange={(event) => {
+                    setNewShiftTiming(event.target.value);
+                    setErrorMessage('');
+                  }}
+                  placeholder="e.g. 4:00 PM - 1:00 AM"
+                />
+              </label>
+              <button
+                type="button"
+                className="button button--ghost desk-form__shift-action"
+                onClick={handleAddShiftTiming}
+                disabled={isUpdatingShiftOptions || !newShiftTiming.trim()}
+              >
+                {isUpdatingShiftOptions ? 'Updating' : 'Add Shift'}
+              </button>
+            </div>
+
+            <div className="desk-form__shift-grid">
+              <label className="desk-form__field">
+                <span>Remove Custom Shift</span>
+                <select
+                  value={shiftTimingToRemove}
+                  onChange={(event) => {
+                    setShiftTimingToRemove(event.target.value);
+                    setErrorMessage('');
+                  }}
+                >
+                  <option value="">Select custom shift</option>
+                  {customShiftTimings.map((shiftTiming) => (
+                    <option key={shiftTiming} value={shiftTiming}>
+                      {shiftTiming}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button
+                type="button"
+                className="button button--ghost desk-form__shift-action"
+                onClick={handleRemoveShiftTiming}
+                disabled={isUpdatingShiftOptions || !shiftTimingToRemove}
+              >
+                {isUpdatingShiftOptions ? 'Updating' : 'Remove Shift'}
+              </button>
+            </div>
+          </section>
 
           {errorMessage ? <p className="modal-card__error">{errorMessage}</p> : null}
 

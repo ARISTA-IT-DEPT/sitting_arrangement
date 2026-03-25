@@ -77,7 +77,7 @@ function Aisle({ variant = 'standard' }) {
   );
 }
 
-function RoomOnePlan({ desks, onDeskClick, canEdit = true, activeDepartment = null }) {
+function RoomOnePlan({ desks, onDeskClick, canEdit = true, activeFilter = null }) {
   const deskMap = Object.fromEntries(desks.filter(Boolean).map((desk) => [desk.desk_id, desk]));
 
   function renderDesk(id, orientation = 'right') {
@@ -88,15 +88,15 @@ function RoomOnePlan({ desks, onDeskClick, canEdit = true, activeDepartment = nu
     }
 
     return (
-      <DeskBlock
-        key={desk.desk_id}
-        desk={desk}
-        orientation={orientation}
-        variant="room1"
-        activeDepartment={activeDepartment}
-        isEditable={canEdit}
-        onClick={() => onDeskClick(desk.desk_id)}
-      />
+        <DeskBlock
+          key={desk.desk_id}
+          desk={desk}
+          orientation={orientation}
+          variant="room1"
+          activeFilter={activeFilter}
+          isEditable={canEdit}
+          onClick={() => onDeskClick(desk.desk_id)}
+        />
     );
   }
 
@@ -113,7 +113,7 @@ function RoomOnePlan({ desks, onDeskClick, canEdit = true, activeDepartment = nu
           desk={desk}
           orientation="top"
           variant="cabin"
-          activeDepartment={activeDepartment}
+          activeFilter={activeFilter}
           isEditable={canEdit}
           onClick={() => onDeskClick(desk.desk_id)}
         />

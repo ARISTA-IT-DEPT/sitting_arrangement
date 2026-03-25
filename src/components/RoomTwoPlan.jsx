@@ -27,7 +27,7 @@ function WalkSpace({ variant }) {
   );
 }
 
-function RoomTwoPlan({ desks, onDeskClick, canEdit = true, activeDepartment = null }) {
+function RoomTwoPlan({ desks, onDeskClick, canEdit = true, activeFilter = null }) {
   const deskMap = Object.fromEntries(desks.filter(Boolean).map((desk) => [desk.desk_id, desk]));
 
   return (
@@ -53,7 +53,7 @@ function RoomTwoPlan({ desks, onDeskClick, canEdit = true, activeDepartment = nu
                       desk={desk}
                       orientation={column.orientation}
                       variant="room2"
-                      activeDepartment={activeDepartment}
+                      activeFilter={activeFilter}
                       isEditable={canEdit}
                       onClick={() => onDeskClick(desk.desk_id)}
                     />

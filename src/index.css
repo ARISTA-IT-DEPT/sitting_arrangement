@@ -433,6 +433,18 @@ button {
   gap: 1rem;
 }
 
+.filter-field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.filter-field span {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+}
+
 .department-select {
   width: 100%;
   min-height: 2.4rem;
@@ -467,6 +479,14 @@ button {
   letter-spacing: 0.08em;
   color: var(--ink-soft);
   font-weight: 700;
+}
+
+.department-metrics__name {
+  margin: -0.18rem 0 0;
+  font-size: 0.88rem;
+  line-height: 1.28;
+  font-weight: 700;
+  color: var(--ink);
 }
 
 .department-metrics__grid {
@@ -1724,6 +1744,25 @@ button {
   margin-top: 0.25rem;
 }
 
+.desk-form__shift-manager {
+  display: grid;
+  gap: 0.8rem;
+  padding: 0.8rem;
+  border: 2px solid rgba(23, 21, 19, 0.14);
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.desk-form__shift-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.7rem;
+  align-items: end;
+}
+
+.desk-form__shift-action {
+  min-width: 8.5rem;
+}
+
 .button {
   min-width: 7rem;
   min-height: 2.7rem;
@@ -1814,5 +1853,13 @@ button {
 
   .map-viewport__zoom-readout {
     min-width: 4.5rem;
+  }
+
+  .desk-form__shift-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .desk-form__shift-action {
+    width: 100%;
   }
 }

@@ -33,28 +33,31 @@ function DeskBlock({
   variant = 'room1',
   onClick,
   isEditable = true,
-  activeDepartment = null,
+  activeFilter = null,
 }) {
   const employeeLabel = desk.employee.trim() || (desk.status === 'available' ? 'Available' : 'Unassigned');
   const genderClass = desk.gender === 'female' ? ' desk-card--female' : desk.gender === 'male' ? ' desk-card--male' : '';
-  const isDepartmentMatch =
-    Boolean(activeDepartment) &&
+  const isFilterMatch =
+    Boolean(activeFilter) &&
     desk.status === 'occupied' &&
     desk.employee.trim() &&
-    desk.department === activeDepartment;
-  const departmentClass = activeDepartment
-    ? isDepartmentMatch
+    (activeFilter.type === 'department'
+      ? desk.department === activeFilter.value
+      : desk.shiftTiming === activeFilter.value);
+  const filterClass = activeFilter
+    ? isFilterMatch
       ? ' desk-card--department-match'
       : ' desk-card--department-dim'
     : '';
+  const titleSuffix = [desk.department, desk.shiftTiming].filter(Boolean).join(' | ');
 
   return (
     <button
       type="button"
-      className={`desk-card desk-card--${variant} desk-card--${orientation} desk-card--${desk.status}${genderClass}${departmentClass}${isEditable ? '' : ' desk-card--static'}`}
+      className={`desk-card desk-card--${variant} desk-card--${orientation} desk-card--${desk.status}${genderClass}${filterClass}${isEditable ? '' : ' desk-card--static'}`}
       onClick={onClick}
       aria-disabled={!isEditable}
-      title={`${desk.desk_id} - ${employeeLabel}${desk.department ? ` (${desk.department})` : ''}`}
+      title={`${desk.desk_id} - ${employeeLabel}${titleSuffix ? ` (${titleSuffix})` : ''}`}
     >
       <span className="desk-card__content">
         <span className="desk-card__meta">

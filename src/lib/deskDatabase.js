@@ -1,6 +1,6 @@
-import { normalizeDesk, withRoomOneAdditionalDesks } from './deskModel';
+import { normalizeDesk, normalizeShiftTimingList, withRoomOneAdditionalDesks } from './deskModel';
 
-const STORAGE_KEY = 'office-desk-layout-editor.rooms.v3';
+const STORAGE_KEY = 'office-desk-layout-editor.rooms.v4';
 const API_ENDPOINT = '/api/desk-layout';
 
 function normalizeDeskEntry(entry, fallbackDesk) {
@@ -51,8 +51,12 @@ function normalizeRooms(value, fallbackRooms) {
   };
 }
 
-function createRecord(rooms, savedAt = new Date().toISOString()) {
-  return { rooms, savedAt };
+function normalizeShiftTimings(value) {
+  return normalizeShiftTimingList(value);
+}
+
+function createRecord(rooms, shiftTimings = [], savedAt = new Date().toISOString()) {
+  return { rooms, shiftTimings: normalizeShiftTimings(shiftTimings), savedAt };
 }
 
 function compareRecords(leftRecord, rightRecord) {
@@ -63,23 +67,24 @@ function compareRecords(leftRecord, rightRecord) {
 
 function readLocalRecord(fallbackRooms) {
   if (typeof window === 'undefined') {
-    return createRecord(fallbackRooms, '');
+    return createRecord(fallbackRooms, [], '');
   }
 
   try {
     const rawValue = window.localStorage.getItem(STORAGE_KEY);
 
     if (!rawValue) {
-      return createRecord(fallbackRooms, '');
+      return createRecord(fallbackRooms, [], '');
     }
 
     const parsedValue = JSON.parse(rawValue);
     return {
       rooms: normalizeRooms(parsedValue?.rooms, fallbackRooms),
+      shiftTimings: normalizeShiftTimings(parsedValue?.shiftTimings),
       savedAt: typeof parsedValue?.savedAt === 'string' ? parsedValue.savedAt : '',
     };
   } catch {
-    return createRecord(fallbackRooms, '');
+    return createRecord(fallbackRooms, [], '');
   }
 }
 
@@ -97,7 +102,7 @@ function writeLocalRecord(record) {
 
 async function readApiRecord(fallbackRooms) {
   if (typeof window === 'undefined') {
-    return createRecord(fallbackRooms, '');
+    return createRecord(fallbackRooms, [], '');
   }
 
   try {
@@ -107,16 +112,17 @@ async function readApiRecord(fallbackRooms) {
     });
 
     if (!response.ok) {
-      return createRecord(fallbackRooms, '');
+      return createRecord(fallbackRooms, [], '');
     }
 
     const payload = await response.json();
     return {
       rooms: normalizeRooms(payload?.rooms, fallbackRooms),
+      shiftTimings: normalizeShiftTimings(payload?.shiftTimings),
       savedAt: typeof payload?.savedAt === 'string' ? payload.savedAt : '',
     };
   } catch {
-    return createRecord(fallbackRooms, '');
+    return createRecord(fallbackRooms, [], '');
   }
 }
 
@@ -149,7 +155,7 @@ async function writeApiRecord(record) {
 }
 
 export function loadDeskDatabaseSnapshot(fallbackRooms) {
-  return readLocalRecord(fallbackRooms).rooms;
+  return readLocalRecord(fallbackRooms);
 }
 
 export async function loadDeskDatabase(fallbackRooms) {
@@ -158,11 +164,11 @@ export async function loadDeskDatabase(fallbackRooms) {
   const latestRecord = compareRecords(localRecord, apiRecord) >= 0 ? localRecord : apiRecord;
 
   writeLocalRecord(latestRecord);
-  return latestRecord.rooms;
+  return latestRecord;
 }
 
-export async function saveDeskDatabase(rooms) {
-  const record = createRecord(rooms);
+export async function saveDeskDatabase({ rooms, shiftTimings = [] }) {
+  const record = createRecord(rooms, shiftTimings);
   writeLocalRecord(record);
   await writeApiRecord(record);
 }

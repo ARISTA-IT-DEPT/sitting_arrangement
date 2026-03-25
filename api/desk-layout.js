@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import postgres from 'postgres';
-import { createInitialRooms, normalizeDesk } from '../src/lib/deskModel.js';
+import { createInitialRooms, normalizeDesk, normalizeShiftTimingList } from '../src/lib/deskModel.js';
 
 const SNAPSHOT_KEY = 'global-layout';
 const projectRoot = fileURLToPath(new URL('../', import.meta.url));
@@ -56,6 +56,7 @@ async function createSeedRecord() {
   return {
     savedAt: '',
     rooms: createInitialRooms(roomOneSeed, roomTwoSeed),
+    shiftTimings: [],
   };
 }
 
@@ -115,7 +116,8 @@ function isValidRecord(record) {
     record.rooms &&
     typeof record.rooms === 'object' &&
     Array.isArray(record.rooms.room1) &&
-    Array.isArray(record.rooms.room2)
+    Array.isArray(record.rooms.room2) &&
+    (record.shiftTimings === undefined || Array.isArray(record.shiftTimings))
   );
 }
 
@@ -124,8 +126,14 @@ async function ensureSnapshotTable(sql) {
     CREATE TABLE IF NOT EXISTS desk_layout_snapshots (
       snapshot_key TEXT PRIMARY KEY,
       rooms JSONB NOT NULL,
+      shift_timings JSONB NOT NULL DEFAULT '[]'::jsonb,
       saved_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
+  `;
+
+  await sql`
+    ALTER TABLE desk_layout_snapshots
+    ADD COLUMN IF NOT EXISTS shift_timings JSONB NOT NULL DEFAULT '[]'::jsonb
   `;
 }
 
@@ -142,6 +150,7 @@ function serializeRecord(row, fallbackRecord) {
           ? new Date(row.saved_at).toISOString()
           : fallbackRecord.savedAt,
     rooms: normalizeRooms(row.rooms, fallbackRecord.rooms),
+    shiftTimings: normalizeShiftTimingList(row.shift_timings),
   };
 }
 
@@ -151,7 +160,7 @@ async function handleGet() {
   await ensureSnapshotTable(sql);
 
   const rows = await sql`
-    SELECT rooms, saved_at
+    SELECT rooms, shift_timings, saved_at
     FROM desk_layout_snapshots
     WHERE snapshot_key = ${SNAPSHOT_KEY}
     LIMIT 1
@@ -171,17 +180,24 @@ async function handlePost(request) {
   const normalizedRecord = {
     savedAt: payload.savedAt,
     rooms: normalizeRooms(payload.rooms, seedRecord.rooms),
+    shiftTimings: normalizeShiftTimingList(payload.shiftTimings),
   };
 
   const sql = getSql();
   await ensureSnapshotTable(sql);
 
   await sql`
-    INSERT INTO desk_layout_snapshots (snapshot_key, rooms, saved_at)
-    VALUES (${SNAPSHOT_KEY}, ${sql.json(normalizedRecord.rooms)}, ${normalizedRecord.savedAt})
+    INSERT INTO desk_layout_snapshots (snapshot_key, rooms, shift_timings, saved_at)
+    VALUES (
+      ${SNAPSHOT_KEY},
+      ${sql.json(normalizedRecord.rooms)},
+      ${sql.json(normalizedRecord.shiftTimings)},
+      ${normalizedRecord.savedAt}
+    )
     ON CONFLICT (snapshot_key)
     DO UPDATE SET
       rooms = EXCLUDED.rooms,
+      shift_timings = EXCLUDED.shift_timings,
       saved_at = EXCLUDED.saved_at
   `;
 

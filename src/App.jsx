@@ -9,7 +9,14 @@ import RoomOnePlan from './components/RoomOnePlan';
 import RoomTwoPlan from './components/RoomTwoPlan';
 import { fetchAdminSession, loginAdmin, logoutAdmin } from './lib/adminSession';
 import { loadDeskDatabase, loadDeskDatabaseSnapshot, saveDeskDatabase } from './lib/deskDatabase';
-import { createInitialRooms, DEPARTMENTS } from './lib/deskModel';
+import {
+  buildShiftTimingOptions,
+  createInitialRooms,
+  DEPARTMENTS,
+  isDefaultShiftTiming,
+  normalizeShiftTiming,
+  normalizeShiftTimingList,
+} from './lib/deskModel';
 
 const ROOM_TABS = [
   { key: 'room1', label: 'Room 1' },
@@ -17,12 +24,14 @@ const ROOM_TABS = [
 ];
 
 const initialRooms = createInitialRooms(room1Source, room2Source);
+const initialDeskState = loadDeskDatabaseSnapshot(initialRooms);
 
 function App() {
   const [activeRoom, setActiveRoom] = useState('room1');
-  const [rooms, setRooms] = useState(() => loadDeskDatabaseSnapshot(initialRooms));
+  const [deskState, setDeskState] = useState(() => initialDeskState);
   const [selectedDeskKey, setSelectedDeskKey] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
+  const [selectedShiftTiming, setSelectedShiftTiming] = useState(null);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [authState, setAuthState] = useState({
     isLoading: true,
@@ -31,6 +40,8 @@ function App() {
     isConfigured: true,
   });
 
+  const rooms = deskState.rooms;
+  const customShiftTimings = deskState.shiftTimings ?? [];
   const activeDesks = rooms[activeRoom];
   const activeDesk = selectedDeskKey
     ? activeDesks.find((desk) => desk?.desk_id === selectedDeskKey) ?? null
@@ -41,35 +52,49 @@ function App() {
   const maleCount = activeDesks.filter((desk) => desk?.status === 'occupied' && desk.gender === 'male').length;
   const femaleCount = activeDesks.filter((desk) => desk?.status === 'occupied' && desk.gender === 'female').length;
   const allDesks = Object.values(rooms).flat().filter(Boolean);
+  const shiftTimingOptions = buildShiftTimingOptions(allDesks, customShiftTimings);
   const combinedOccupiedCount = allDesks.filter((desk) => desk.status === 'occupied').length;
   const combinedAvailableCount = allDesks.filter((desk) => desk.status === 'available').length;
   const combinedMaleCount = allDesks.filter((desk) => desk.status === 'occupied' && desk.gender === 'male').length;
   const combinedFemaleCount = allDesks.filter((desk) => desk.status === 'occupied' && desk.gender === 'female').length;
-  const highlightedDepartmentCount = selectedDepartment
+
+  const activeFilter = selectedDepartment
+    ? { type: 'department', value: selectedDepartment }
+    : selectedShiftTiming
+      ? { type: 'shiftTiming', value: selectedShiftTiming }
+      : null;
+
+  const highlightedFilterCount = activeFilter
     ? activeDesks.filter(
         (desk) =>
           desk?.status === 'occupied' &&
           desk.employee.trim() &&
-          desk.department === selectedDepartment,
+          (activeFilter.type === 'department'
+            ? desk.department === activeFilter.value
+            : desk.shiftTiming === activeFilter.value),
       ).length
     : 0;
 
-  const departmentMaleCount = selectedDepartment
+  const filterMaleCount = activeFilter
     ? activeDesks.filter(
         (desk) =>
           desk?.status === 'occupied' &&
           desk.employee.trim() &&
-          desk.department === selectedDepartment &&
+          (activeFilter.type === 'department'
+            ? desk.department === activeFilter.value
+            : desk.shiftTiming === activeFilter.value) &&
           desk.gender === 'male',
       ).length
     : 0;
 
-  const departmentFemaleCount = selectedDepartment
+  const filterFemaleCount = activeFilter
     ? activeDesks.filter(
         (desk) =>
           desk?.status === 'occupied' &&
           desk.employee.trim() &&
-          desk.department === selectedDepartment &&
+          (activeFilter.type === 'department'
+            ? desk.department === activeFilter.value
+            : desk.shiftTiming === activeFilter.value) &&
           desk.gender === 'female',
       ).length
     : 0;
@@ -104,18 +129,24 @@ function App() {
           status: updatedDesk.status,
           gender: updatedDesk.gender,
           department: updatedDesk.department,
+          shiftTiming: updatedDesk.shiftTiming,
         };
       }),
     };
 
-    setRooms(nextRooms);
+    const nextDeskState = {
+      rooms: nextRooms,
+      shiftTimings: customShiftTimings,
+    };
+
+    setDeskState(nextDeskState);
 
     try {
-      await saveDeskDatabase(nextRooms);
+      await saveDeskDatabase(nextDeskState);
       setSelectedDeskKey(null);
     } catch (error) {
-      const latestRooms = await loadDeskDatabase(initialRooms);
-      setRooms(latestRooms);
+      const latestDeskState = await loadDeskDatabase(initialRooms);
+      setDeskState(latestDeskState);
 
       if (error instanceof Error && error.message.includes('Admin login required')) {
         setAuthState((previousState) => ({
@@ -126,6 +157,73 @@ function App() {
         setIsLoginOpen(true);
       }
 
+      throw error;
+    }
+  }
+
+  async function handleShiftTimingCreate(shiftTimingInput) {
+    const normalizedShiftTiming = normalizeShiftTiming(shiftTimingInput);
+
+    if (!normalizedShiftTiming) {
+      throw new Error('Enter a valid shift timing before adding it.');
+    }
+
+    if (shiftTimingOptions.includes(normalizedShiftTiming)) {
+      return normalizedShiftTiming;
+    }
+
+    const nextDeskState = {
+      rooms,
+      shiftTimings: normalizeShiftTimingList([...customShiftTimings, normalizedShiftTiming]),
+    };
+
+    setDeskState(nextDeskState);
+
+    try {
+      await saveDeskDatabase(nextDeskState);
+      return normalizedShiftTiming;
+    } catch (error) {
+      const latestDeskState = await loadDeskDatabase(initialRooms);
+      setDeskState(latestDeskState);
+      throw error;
+    }
+  }
+
+  async function handleShiftTimingRemove(shiftTimingInput) {
+    const normalizedShiftTiming = normalizeShiftTiming(shiftTimingInput);
+
+    if (!normalizedShiftTiming) {
+      throw new Error('Select a shift timing before removing it.');
+    }
+
+    if (isDefaultShiftTiming(normalizedShiftTiming)) {
+      throw new Error('Default shift timings cannot be removed.');
+    }
+
+    const isAssignedToDesk = allDesks.some((desk) => desk.shiftTiming === normalizedShiftTiming);
+
+    if (isAssignedToDesk) {
+      throw new Error('This shift timing is assigned to one or more desks. Change those desks first.');
+    }
+
+    const nextDeskState = {
+      rooms,
+      shiftTimings: customShiftTimings.filter((shiftTiming) => shiftTiming !== normalizedShiftTiming),
+    };
+
+    setDeskState(nextDeskState);
+
+    try {
+      await saveDeskDatabase(nextDeskState);
+
+      if (selectedShiftTiming === normalizedShiftTiming) {
+        setSelectedShiftTiming(null);
+      }
+
+      return normalizedShiftTiming;
+    } catch (error) {
+      const latestDeskState = await loadDeskDatabase(initialRooms);
+      setDeskState(latestDeskState);
       throw error;
     }
   }
@@ -155,7 +253,7 @@ function App() {
     let isCancelled = false;
 
     async function hydrateApp() {
-      const [storedRooms, session] = await Promise.all([
+      const [storedDeskState, session] = await Promise.all([
         loadDeskDatabase(initialRooms),
         fetchAdminSession().catch(() => ({
           isAdmin: false,
@@ -165,7 +263,7 @@ function App() {
       ]);
 
       if (!isCancelled) {
-        setRooms(storedRooms);
+        setDeskState(storedDeskState);
         setAuthState({
           isLoading: false,
           isAdmin: Boolean(session.isAdmin),
@@ -186,9 +284,27 @@ function App() {
     ? `Admin mode active${authState.username ? ` for ${authState.username}` : ''}. Click any desk to edit and save shared seating changes.`
     : 'View-only mode is active. Admin login is required before any desk changes can be saved.';
 
-  const departmentPanelSubtitle = selectedDepartment
-    ? `${highlightedDepartmentCount} occupied desk${highlightedDepartmentCount === 1 ? '' : 's'} highlighted in ${ROOM_TABS.find((room) => room.key === activeRoom)?.label ?? activeRoom}.`
-    : 'Select a department below to highlight it on the floor plan.';
+  const filterPanelSubtitle = activeFilter
+    ? `${highlightedFilterCount} occupied desk${highlightedFilterCount === 1 ? '' : 's'} highlighted in ${ROOM_TABS.find((room) => room.key === activeRoom)?.label ?? activeRoom}.`
+    : 'Choose either a department filter or a shift timing filter. Selecting one clears the other.';
+
+  function handleDepartmentFilterChange(event) {
+    const nextDepartment = event.target.value || null;
+    setSelectedDepartment(nextDepartment);
+
+    if (nextDepartment) {
+      setSelectedShiftTiming(null);
+    }
+  }
+
+  function handleShiftTimingFilterChange(event) {
+    const nextShiftTiming = event.target.value || null;
+    setSelectedShiftTiming(nextShiftTiming);
+
+    if (nextShiftTiming) {
+      setSelectedDepartment(null);
+    }
+  }
 
   return (
     <div className="app-shell">
@@ -258,43 +374,66 @@ function App() {
       </header>
 
       <main className="plan-stage">
-        <aside className="department-panel" aria-label="Department filters">
+        <aside className="department-panel" aria-label="Desk filters">
           <div className="department-panel__header">
-            <p className="department-panel__eyebrow">Departments</p>
-            <h2>Highlight By Team</h2>
-            <p className="department-panel__subtitle">{departmentPanelSubtitle}</p>
+            <p className="department-panel__eyebrow">Filters</p>
+            <h2>Highlight Desks</h2>
+            <p className="department-panel__subtitle">{filterPanelSubtitle}</p>
           </div>
 
           <div className="department-panel__body">
-            <select
-              className="department-select input"
-              value={selectedDepartment || ''}
-              onChange={(e) => setSelectedDepartment(e.target.value || null)}
-              aria-label="Select department to highlight"
-            >
-              <option value="">-- No Department Filter --</option>
-              {DEPARTMENTS.map((department) => (
-                <option key={department} value={department}>
-                  {department}
-                </option>
-              ))}
-            </select>
+            <label className="filter-field">
+              <span>Department Filter</span>
+              <select
+                className="department-select input"
+                value={selectedDepartment || ''}
+                onChange={handleDepartmentFilterChange}
+                aria-label="Select department to highlight"
+              >
+                <option value="">-- No Department Filter --</option>
+                {DEPARTMENTS.map((department) => (
+                  <option key={department} value={department}>
+                    {department}
+                  </option>
+                ))}
+              </select>
+            </label>
 
-            {selectedDepartment && (
+            <label className="filter-field">
+              <span>Shift Timing Filter</span>
+              <select
+                className="department-select input"
+                value={selectedShiftTiming || ''}
+                onChange={handleShiftTimingFilterChange}
+                aria-label="Select shift timing to highlight"
+              >
+                <option value="">-- No Shift Timing Filter --</option>
+                {shiftTimingOptions.map((shiftTiming) => (
+                  <option key={shiftTiming} value={shiftTiming}>
+                    {shiftTiming}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            {activeFilter && (
               <div className="department-metrics">
-                <p className="department-metrics__title">{selectedDepartment} Stats</p>
+                <p className="department-metrics__title">
+                  {activeFilter.type === 'department' ? 'Department' : 'Shift Timing'} Stats
+                </p>
+                <p className="department-metrics__name">{activeFilter.value}</p>
                 <div className="department-metrics__grid">
                   <div className="department-metrics__stat department-metrics__stat--total">
                     <span className="department-metrics__label">Total</span>
-                    <strong className="department-metrics__value">{highlightedDepartmentCount}</strong>
+                    <strong className="department-metrics__value">{highlightedFilterCount}</strong>
                   </div>
                   <div className="department-metrics__stat department-metrics__stat--male">
                     <span className="department-metrics__label">Male</span>
-                    <strong className="department-metrics__value">{departmentMaleCount}</strong>
+                    <strong className="department-metrics__value">{filterMaleCount}</strong>
                   </div>
                   <div className="department-metrics__stat department-metrics__stat--female">
                     <span className="department-metrics__label">Female</span>
-                    <strong className="department-metrics__value">{departmentFemaleCount}</strong>
+                    <strong className="department-metrics__value">{filterFemaleCount}</strong>
                   </div>
                 </div>
               </div>
@@ -309,14 +448,14 @@ function App() {
                 desks={activeDesks}
                 onDeskClick={handleDeskOpen}
                 canEdit={authState.isAdmin}
-                activeDepartment={selectedDepartment}
+                activeFilter={activeFilter}
               />
             ) : (
               <RoomTwoPlan
                 desks={activeDesks}
                 onDeskClick={handleDeskOpen}
                 canEdit={authState.isAdmin}
-                activeDepartment={selectedDepartment}
+                activeFilter={activeFilter}
               />
             )}
           </PlanViewport>
@@ -328,6 +467,10 @@ function App() {
           key={activeDesk.desk_id}
           desk={activeDesk}
           roomLabel={ROOM_TABS.find((room) => room.key === activeRoom)?.label ?? activeRoom}
+          shiftTimingOptions={shiftTimingOptions}
+          customShiftTimings={customShiftTimings}
+          onAddShiftTiming={handleShiftTimingCreate}
+          onRemoveShiftTiming={handleShiftTimingRemove}
           onClose={() => setSelectedDeskKey(null)}
           onSave={handleDeskSave}
         />

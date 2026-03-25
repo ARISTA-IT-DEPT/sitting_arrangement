@@ -3,7 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { createInitialRooms, normalizeDesk } from './src/lib/deskModel.js';
+import { createInitialRooms, normalizeDesk, normalizeShiftTimingList } from './src/lib/deskModel.js';
 
 const projectRoot = fileURLToPath(new URL('.', import.meta.url));
 const storageDir = path.join(projectRoot, 'storage');
@@ -25,6 +25,7 @@ async function createSeedRecord() {
   return {
     savedAt: '',
     rooms: createInitialRooms(roomOneSeed, roomTwoSeed),
+    shiftTimings: [],
   };
 }
 
@@ -85,7 +86,8 @@ function isValidRecord(record) {
     record.rooms &&
     typeof record.rooms === 'object' &&
     Array.isArray(record.rooms.room1) &&
-    Array.isArray(record.rooms.room2)
+    Array.isArray(record.rooms.room2) &&
+    (record.shiftTimings === undefined || Array.isArray(record.shiftTimings))
   );
 }
 
@@ -110,6 +112,7 @@ function normalizeRecord(record, fallbackRecord) {
       }),
       room2: record.rooms.room2.map(normalizeDesk),
     },
+    shiftTimings: normalizeShiftTimingList(record.shiftTimings),
   };
 }
 
