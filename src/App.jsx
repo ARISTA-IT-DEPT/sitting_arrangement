@@ -25,6 +25,35 @@ const ROOM_TABS = [
 
 const initialRooms = createInitialRooms(room1Source, room2Source);
 const initialDeskState = loadDeskDatabaseSnapshot(initialRooms);
+const IST_DATE_FORMATTER = new Intl.DateTimeFormat('en-IN', {
+  timeZone: 'Asia/Kolkata',
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  hour: 'numeric',
+  minute: '2-digit',
+  hour12: true,
+});
+
+function formatLastUpdated(savedAt) {
+  if (!savedAt) {
+    return 'Last Updated: Not available';
+  }
+
+  const parsedDate = new Date(savedAt);
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    return 'Last Updated: Not available';
+  }
+
+  const parts = Object.fromEntries(
+    IST_DATE_FORMATTER.formatToParts(parsedDate)
+      .filter((part) => part.type !== 'literal')
+      .map((part) => [part.type, part.value]),
+  );
+
+  return `Last Updated: ${parts.day} ${parts.month} ${parts.year}, ${parts.hour}:${parts.minute} ${parts.dayPeriod?.toUpperCase() ?? ''} IST`;
+}
 
 function App() {
   const [activeRoom, setActiveRoom] = useState('room1');
@@ -116,6 +145,7 @@ function App() {
   }
 
   async function handleDeskSave(updatedDesk) {
+    const nextSavedAt = new Date().toISOString();
     const nextRooms = {
       ...rooms,
       [activeRoom]: rooms[activeRoom].map((desk) => {
@@ -137,6 +167,7 @@ function App() {
     const nextDeskState = {
       rooms: nextRooms,
       shiftTimings: customShiftTimings,
+      savedAt: nextSavedAt,
     };
 
     setDeskState(nextDeskState);
@@ -172,9 +203,11 @@ function App() {
       return normalizedShiftTiming;
     }
 
+    const nextSavedAt = new Date().toISOString();
     const nextDeskState = {
       rooms,
       shiftTimings: normalizeShiftTimingList([...customShiftTimings, normalizedShiftTiming]),
+      savedAt: nextSavedAt,
     };
 
     setDeskState(nextDeskState);
@@ -206,9 +239,11 @@ function App() {
       throw new Error('This shift timing is assigned to one or more desks. Change those desks first.');
     }
 
+    const nextSavedAt = new Date().toISOString();
     const nextDeskState = {
       rooms,
       shiftTimings: customShiftTimings.filter((shiftTiming) => shiftTiming !== normalizedShiftTiming),
+      savedAt: nextSavedAt,
     };
 
     setDeskState(nextDeskState);
@@ -283,6 +318,7 @@ function App() {
   const headerSubtitle = authState.isAdmin
     ? `Admin mode active${authState.username ? ` for ${authState.username}` : ''}. Click any desk to edit and save shared seating changes.`
     : 'View-only mode is active. Admin login is required before any desk changes can be saved.';
+  const lastUpdatedLabel = formatLastUpdated(deskState.savedAt);
 
   const filterPanelSubtitle = activeFilter
     ? `${highlightedFilterCount} occupied desk${highlightedFilterCount === 1 ? '' : 's'} highlighted in ${ROOM_TABS.find((room) => room.key === activeRoom)?.label ?? activeRoom}.`
@@ -313,6 +349,7 @@ function App() {
           <p className="app-header__eyebrow">Top-down floor plan editor</p>
           <h1>Office Desk Layout Editor</h1>
           <p className="app-header__subtitle">{headerSubtitle}</p>
+          <p className="app-header__timestamp">{lastUpdatedLabel}</p>
         </div>
 
         <nav className="room-tabs" aria-label="Room navigation">

@@ -223,8 +223,8 @@ export async function loadDeskDatabase(fallbackRooms) {
   return latestRecord;
 }
 
-export async function saveDeskDatabase({ rooms, shiftTimings = [] }) {
-  const record = createRecord(rooms, shiftTimings);
+export async function saveDeskDatabase({ rooms, shiftTimings = [], savedAt }) {
+  const record = createRecord(rooms, shiftTimings, savedAt);
   writeLocalRecord(record);
   await writeApiRecord(record);
 }
